@@ -8,7 +8,7 @@ on:
             - release
 
 jobs:
-  build:
+  ci-job:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -17,13 +17,13 @@ jobs:
       - name: Code Checkout
         run: echo "Code Checkout from GitHub" 
       - name: Build
-        if: github.ref_name == 'feature/*'
+        if: startsWith(github.ref_name, 'feature/')
         run: echo "Building app to deploy on ${{ matrix.environment }}"
       - name: Test
-        if: github.ref_name == 'feature/*'
+        if: startsWith(github.ref_name, 'feature/')
         run: echo "Testing from ${{ matrix.environment }}"
       - name: Deploy
-        if: github.ref_name == 'feature/*'
+        if: startsWith(github.ref_name, 'feature/')
         run: echo "Deploy from ${{ matrix.environment }}" 
 
 
