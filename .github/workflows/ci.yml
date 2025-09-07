@@ -17,13 +17,13 @@ jobs:
       - name: Code Checkout
         run: echo "Code Checkout from GitHub" 
       - name: Build
-        if: github.base_ref == 'feature/*'
+        if: github.ref_name == 'feature/*'
         run: echo "Building app to deploy on ${{ matrix.environment }}"
       - name: Test
-        if: github.base_ref == 'feature/*'
+        if: github.ref_name == 'feature/*'
         run: echo "Testing from ${{ matrix.environment }}"
       - name: Deploy
-        if: github.base_ref == 'feature/*'
+        if: github.ref_name == 'feature/*'
         run: echo "Deploy from ${{ matrix.environment }}" 
 
 
