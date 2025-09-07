@@ -40,7 +40,7 @@ jobs:
              ([[ "${{ matrix.branch }}" == "feature" ]] && [[ "${GITHUB_REF_NAME}" == feature/* ]]); then
             echo "✅ This combination is valid"
           else
-            echo "❌ Skipping this job"
+            echo "❌ Skipping this job..."
             exit 0
           fi
 
