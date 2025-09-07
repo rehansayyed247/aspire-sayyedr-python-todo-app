@@ -12,20 +12,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        branches: [develop, release, feature]
+        environment: [dev, sit, uat]
     steps:
       - name: Code Checkout
         run: echo "Code Checkout from GitHub" 
-
       - name: Build
-        if: github.ref_name == ${{ matrix.branches }}
-        run: echo "Building from ${{ matrix.branches }}"
+        if: github.base_ref == 'feature/*'
+        run: echo "Building app to deploy on ${{ matrix.environment }}"
       - name: Test
-        if: github.ref_name == ${{ matrix.branches }}
-        run: echo "Testing from ${{ matrix.branches }}"
+        if: github.base_ref == 'feature/*'
+        run: echo "Testing from ${{ matrix.environment }}"
       - name: Deploy
-        if: github.ref_name == ${{ matrix.branches }}
-        run: echo "Deploy from ${{ matrix.branches }}" 
+        if: github.base_ref == 'feature/*'
+        run: echo "Deploy from ${{ matrix.environment }}" 
 
 
 
