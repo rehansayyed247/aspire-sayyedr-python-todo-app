@@ -17,29 +17,38 @@ jobs:
         include:
           - branch: develop
             environment: dev
-          - branch: feature/*
-            environment: dev
           - branch: release
             environment: sit
           - branch: release
             environment: uat
           - branch: main
             environment: prod
-
-    # Run this job only if the current branch matches the matrix.branch
-    if: github.ref_name == matrix.branch || (startsWith(github.ref_name, 'feature/') && matrix.branch == 'feature/*')
+          - branch: feature
+            environment: dev
 
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
 
+      - name: Validate branch and environment
+        run: |
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Matrix branch: ${{ matrix.branch }}"
+          echo "Environment: ${{ matrix.environment }}"
+
+          if [[ "${GITHUB_REF_NAME}" == "${{ matrix.branch }}" ]] || 
+             ([[ "${{ matrix.branch }}" == "feature" ]] && [[ "${GITHUB_REF_NAME}" == feature/* ]]); then
+            echo "✅ This combination is valid"
+          else
+            echo "❌ Skipping this job"
+            exit 0
+          fi
+
       - name: Build
-        run: echo "Building app for ${{ matrix.environment }}"
+        run: echo "Building for ${{ matrix.environment }}"
 
       - name: Test
         run: echo "Testing on ${{ matrix.environment }}"
 
       - name: Deploy
         run: echo "Deploying to ${{ matrix.environment }}"
-
-
