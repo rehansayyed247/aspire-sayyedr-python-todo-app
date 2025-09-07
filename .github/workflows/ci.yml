@@ -1,0 +1,31 @@
+name: CI Workflow
+
+on: 
+    push:
+        branches:
+            - develop
+            - feature
+            - release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branches: [develop, release, feature]
+    steps:
+      - name: Code Checkout
+        run: "Code Checkout from GitHub" 
+
+      - name: Build
+        if: github.ref_name == matrix.branches
+        run: "Building from ${{ matrix.branches }}"
+      - name: Test
+        if: github.ref_name == matrix.branches
+        run: "Testing from ${{ matrix.branches }}"
+      - name: Deploy
+        if: github.ref_name == matrix.branches
+        run: "Deploy" 
+
+
+
