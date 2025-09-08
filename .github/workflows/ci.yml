@@ -6,43 +6,26 @@ on:
       - develop
       - feature/*
       - release
+  
+  pull_request:
+    types:
+      - closed
+    branches:
       - main
 
 jobs:
   ci-job:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - branch: develop
-            environment: dev
-          - branch: release
-            environment: sit
-          - branch: release
-            environment: uat
-          - branch: main
-            environment: prod
-          - branch: feature
-            environment: dev
-
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
 
-      - name: Build
-        if: |
-          (github.ref_name == matrix.branch) ||
-          (matrix.branch == 'feature' && startsWith(github.ref_name, 'feature/'))
-        run: echo "Building for ${{ matrix.environment }}"
+      - name: Docker Setup
+        uses: docker/setup-buildx-action@v3
 
-      - name: Test
-        if: |
-          (github.ref_name == matrix.branch) ||
-          (matrix.branch == 'feature' && startsWith(github.ref_name, 'feature/'))
-        run: echo "Testing on ${{ matrix.environment }}"
-
-      - name: Deploy
-        if: |
-          (github.ref_name == matrix.branch) ||
-          (matrix.branch == 'feature' && startsWith(github.ref_name, 'feature/'))
-        run: echo "Deploying to ${{ matrix.environment }}"
+      - name: Build Image and Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: rehansayyed/to-do-app:latest
